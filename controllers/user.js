@@ -1,5 +1,6 @@
 import User from "../models/user.js";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken"
 import { sendCookie } from "../utils/features.js";
 import ErrorHandler from "../middleware/error.js";
 
@@ -36,7 +37,14 @@ export const userRegister = async (req, res,next) => {
             password: hashedpwd,
         })
 
-        sendCookie(user, res, 201, "Registered Successfully")
+        const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET)
+
+        return res.status(201).json({
+            success: true,
+            token,
+            message: "Registered Successfully",
+        })
+        // sendCookie(user, res, 201, "Registered Successfully")
     } catch (error) {
         next(error);
     }
@@ -60,7 +68,14 @@ export const userLogin = async (req, res, next) => {
             return next(new ErrorHandler("Invalid Email or Password", 400))
         }
 
-        sendCookie(user, res, 200, `welcome back ${user.name}`)
+        const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET)
+
+        return res.status(200).json({
+            success: true,
+            token,
+            message:` welcome back ${ user.name }`,
+        })
+        // sendCookie(user, res, 200, `welcome back ${user.name}`)
     } catch (error) {
         next(error);
     }
