@@ -15,7 +15,7 @@ userrouter.get("/logout",isAuthenticated,logoutUser )
 // static url /userid
 //dynamic url /userid/:id means /userid sudhinu static url aagal nu dynamic jene req.params thi access thay
 //dynamic route function ne last ma rakhvu bcs js top to bottom compile thay
-userrouter.get("/me",getMyProfile); 
+userrouter.post("/me",getMyProfile); 
 // userrouter.get("/me",isAuthenticated,getMyProfile);
 
 export default userrouter;
