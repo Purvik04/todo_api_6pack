@@ -4,10 +4,22 @@ import { deleteTask, getMyTasks, newTask, updateTask } from "../controllers/task
 
 const taskRouter = express.Router();
 
-taskRouter.post("/new", isAuthenticated,newTask)
+//for app
+taskRouter.post("/new", newTask),
 
-taskRouter.get("/mytasks", isAuthenticated,getMyTasks)
+taskRouter.post("/mytasks", getMyTasks),
 
-taskRouter.route("/:taskId").put(isAuthenticated, updateTask).delete(isAuthenticated, deleteTask)
+taskRouter.put("/updateTask",updateTask),
+
+taskRouter.delete("/deleteTask",deleteTask)
+
 
 export default taskRouter;
+
+
+//for web
+// taskRouter.post("/new", isAuthenticated,newTask)
+
+// taskRouter.get("/mytasks", isAuthenticated,getMyTasks)
+
+// taskRouter.route("/:taskId").put(isAuthenticated, updateTask).delete(isAuthenticated, deleteTask)

@@ -1,15 +1,16 @@
 import Task from "../models/task.js"
 import ErrorHandler from "../middleware/error.js"
+import mongoose from "mongoose";
 
 export const newTask = async(req,res,next)=>{
 
     try {
-        const { title, description } = req.body;
-
+        const { userId, title, description } = req.body;
+        
         await Task.create({
             title,
             description,
-            user: req.user
+            user: userId,
         })
 
         return res.status(201).json({
@@ -25,9 +26,10 @@ export const newTask = async(req,res,next)=>{
 export const getMyTasks = async (req,res,next)=>{
 
     try {
-        const userid = req.user._id;
+        const {userId} = req.body;
+        // const userid = req.user._id;
 
-        const tasks = await Task.find({ user: userid });
+        const tasks = await Task.find({ user: userId });
 
         return res.status(200).json({
             success: true,
@@ -41,7 +43,8 @@ export const getMyTasks = async (req,res,next)=>{
 export const updateTask = async (req,res,next)=>{
 
     try {
-        const { taskId } = req.params;
+        const { taskId, title, description, isCompleted } = req.body;
+        // const { taskId } = req.params;
 
         const task = await Task.findById(taskId);
 
@@ -50,7 +53,9 @@ export const updateTask = async (req,res,next)=>{
             return next(new ErrorHandler("Task Not Found", 404))
         }
 
-        task.isCompleted = !(task.isCompleted);
+        task.title = title;
+        task.description = description;
+        task.isCompleted = isCompleted;
 
         await task.save();
 
@@ -66,7 +71,8 @@ export const updateTask = async (req,res,next)=>{
 export const deleteTask = async (req,res,next)=>{
 
    try {
-       const { taskId } = req.params;
+        const {taskId} = req.body;
+    //    const { taskId } = req.params;
 
        const task = await Task.findByIdAndDelete(taskId);
 
