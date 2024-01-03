@@ -82,11 +82,23 @@ export const userLogin = async (req, res, next) => {
 
 }
 
-export const getMyProfile = (req, res) => {
+export const getMyProfile = async (req, res) => {
+
+    const {token}= req.body;
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    const user = await User.findById(decoded._id); 
+
     return res.status(200).json({
         success: true,
-        user: req.user,
+        user,
     })
+
+    // return res.status(200).json({
+    //     success: true,
+    //     user: req.user,
+    // })
 }
 
 export const logoutUser = (req,res)=>{
